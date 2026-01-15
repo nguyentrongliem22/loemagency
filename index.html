@@ -1,0 +1,487 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Phone, 
+  Mail, 
+  MapPin, 
+  Facebook, 
+  MessageCircle, 
+  TrendingUp, 
+  PenTool, 
+  ShieldCheck, 
+  BarChart3, 
+  ChevronRight,
+  Menu,
+  X,
+  Info,
+  CheckCircle2,
+  MessageCircleMore
+} from 'lucide-react';
+
+const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeBranch, setActiveBranch] = useState(0);
+  const [selectedService, setSelectedService] = useState(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const services = [
+    {
+      id: 1,
+      title: "Quảng cáo (Facebook Ads Performance)",
+      description: "Tối ưu hóa ngân sách và chuyển đổi, mang lại doanh thu thực tế cho doanh nghiệp.",
+      fullDescription: "Nhóm dịch vụ trọng tâm của Loem Agency, ứng dụng các kỹ thuật chạy quảng cáo hiện đại nhất của Meta để tối đa hóa chỉ số ROI cho khách hàng.",
+      icon: <TrendingUp className="w-8 h-8 text-blue-600" />,
+      items: [
+        { name: "Quảng cáo Chuyển đổi (Conversion Ads)", detail: "Tập trung ra đơn hàng trực tiếp trên Website/Landing Page." },
+        { name: "Quảng cáo Tin nhắn (Messenger Ads)", detail: "Tối ưu lượt inbox và kết hợp kịch bản chốt đơn tự động." },
+        { name: "Quảng cáo Livestream", detail: "Đẩy mắt xem và tương tác thực tế giúp tăng hiệu quả bán hàng trực tiếp." },
+        { name: "Tìm kiếm khách hàng tiềm năng (Lead Ads)", detail: "Thu thập SĐT/Email qua form Facebook cho các ngành BĐS, Bảo hiểm..." },
+        { name: "Tiếp thị lại (Remarketing)", detail: "Bám đuổi khách hàng cũ để nhắc nhớ và thúc đẩy hành vi mua lại." }
+      ]
+    },
+    {
+      id: 2,
+      title: "Nội dung & Sáng tạo (Creative Services)",
+      description: "Sản xuất nội dung 'chạm' cảm xúc trong kỷ nguyên AI.",
+      fullDescription: "Chúng tôi tin rằng trong kỷ nguyên AI, nội dung mang tính cá nhân hóa và sáng tạo khác biệt là yếu tố sống còn để giữ chân người dùng.",
+      icon: <PenTool className="w-8 h-8 text-purple-600" />,
+      items: [
+        { name: "Quản trị Fanpage (Fanpage Care)", detail: "Lên kế hoạch nội dung (Content Calendar) và đăng bài định kỳ chuyên nghiệp." },
+        { name: "Video ngắn (Reels)", detail: "Sản xuất video dọc chuẩn xu hướng, tận dụng thuật toán phân phối của Meta." },
+        { name: "Thiết kế hình ảnh", detail: "Banner, Carousel, bộ nhận diện chuyên nghiệp đồng bộ cho thương hiệu." },
+        { name: "Xây dựng Landing Page", detail: "Thiết kế trang đích tối ưu UI/UX để tăng tỉ lệ chuyển đổi đơn hàng." }
+      ]
+    },
+    {
+      id: 3,
+      title: "Kỹ thuật & Hạ tầng (Infrastructure)",
+      description: "Giải pháp ổn định và bảo mật lâu dài cho hệ thống quảng cáo.",
+      fullDescription: "Cung cấp nền tảng vững chắc để doanh nghiệp vận hành các chiến dịch quảng cáo ngân sách lớn mà không lo gián đoạn.",
+      icon: <ShieldCheck className="w-8 h-8 text-green-600" />,
+      items: [
+        { name: "Cho thuê tài khoản Agency", detail: "Cung cấp tài khoản Invoice cấp Agency, độ bền cao cho ngân sách lớn." },
+        { name: "Kháng nghị & Bảo mật", detail: "Mở khóa tài khoản, xác minh danh tính và bảo mật Fanpage chống hack." },
+        { name: "Cài đặt Tracking (API/Pixel)", detail: "Thiết lập Conversion API/Pixel đo lường dữ liệu chính xác 100%." },
+        { name: "Dịch vụ Tích xanh (Meta Verified)", detail: "Hỗ trợ cá nhân/doanh nghiệp lên tick xanh chính chủ tăng uy tín." }
+      ]
+    },
+    {
+      id: 4,
+      title: "Tư vấn & Chiến lược (Consulting)",
+      description: "Lộ trình bài bản giúp doanh nghiệp bứt phá thị trường.",
+      fullDescription: "Phù hợp cho các doanh nghiệp cần một bộ khung vận hành bài bản thay vì chỉ chạy các chiến dịch lẻ tẻ.",
+      icon: <BarChart3 className="w-8 h-8 text-orange-600" />,
+      items: [
+        { name: "Tư vấn Marketing tổng thể", detail: "Nghiên cứu đối thủ, Insight khách hàng và lập kế hoạch ngân sách năm." },
+        { name: "Đào tạo & Inhouse Coaching", detail: "Đào tạo đội ngũ nhân sự tại chỗ để doanh nghiệp tự vận hành hệ thống." },
+        { name: "Ads Audit (Kiểm tra hiệu quả)", detail: "Rà soát toàn diện các chiến dịch cũ để tìm ra lỗ hổng và cách tối ưu." }
+      ]
+    }
+  ];
+
+  const branches = [
+    { 
+      city: "Đà Nẵng (Trụ sở)", 
+      address: "333 Nguyễn Hữu Thọ, Hải Châu, TP. Đà Nẵng",
+      mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3834.464673898144!2d108.20456107584063!3d16.04139884017342!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219965766299b%3A0x86d877e8a9f2a08!2zMzMzIE5ndXnhu4VuIEjhu691IFRo4buNLCBI4bqjaSBDaMOidSwgxJDDoCBO4bq1bmcsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1715000000000!5m2!1svi!2s"
+    },
+    { 
+      city: "Hà Nội", 
+      address: "333 Nguyễn Trãi, Thanh Xuân, Hà Nội",
+      mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.9192404092283!2d105.79813587588046!3d20.995874280642876!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac937803a649%3A0x6a0f757f4951475c!2zMzMzIE5ndXnhu4VuIFRyw6NpLCBUaGFuaCBYdcOibiwgSMOgIE7hu5lp!5e0!3m2!1svi!2s!4v1715000000000!5m2!1svi!2s"
+    }
+  ];
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsMenuOpen(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 overflow-x-hidden">
+      {/* Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <div className="flex items-center">
+            <h1 className={`text-2xl font-bold tracking-tight ${scrolled ? 'text-blue-900' : 'text-white'}`}>
+              LOEM <span className="text-blue-500">AGENCY</span>
+            </h1>
+          </div>
+          
+          <div className="hidden md:flex space-x-8 items-center">
+            <button onClick={() => scrollToSection('home')} className={`${scrolled ? 'text-slate-600' : 'text-slate-100'} hover:text-blue-500 font-medium transition-colors`}>Trang chủ</button>
+            <button onClick={() => scrollToSection('services')} className={`${scrolled ? 'text-slate-600' : 'text-slate-100'} hover:text-blue-500 font-medium transition-colors`}>Dịch vụ</button>
+            <button onClick={() => scrollToSection('branches')} className={`${scrolled ? 'text-slate-600' : 'text-slate-100'} hover:text-blue-500 font-medium transition-colors`}>Chi nhánh</button>
+            <button onClick={() => scrollToSection('contact')} className="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition shadow-lg font-semibold">Liên hệ ngay</button>
+          </div>
+
+          <div className="md:hidden">
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2">
+              {isMenuOpen ? <X className={scrolled ? 'text-slate-900' : 'text-white'} /> : <Menu className={scrolled ? 'text-slate-900' : 'text-white'} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white absolute top-full left-0 w-full shadow-2xl p-6 flex flex-col space-y-4">
+            <button onClick={() => scrollToSection('home')} className="text-slate-800 text-left py-2 border-b">Trang chủ</button>
+            <button onClick={() => scrollToSection('services')} className="text-slate-800 text-left py-2 border-b">Dịch vụ</button>
+            <button onClick={() => scrollToSection('branches')} className="text-slate-800 text-left py-2 border-b">Chi nhánh</button>
+            <button onClick={() => scrollToSection('contact')} className="bg-blue-600 text-white px-5 py-3 rounded-lg text-center font-bold">Liên hệ ngay</button>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <section id="home" className="relative h-screen flex items-center overflow-hidden bg-slate-900">
+        <div className="absolute inset-0 opacity-40">
+          <img 
+            src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80" 
+            alt="Agency background" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="max-w-2xl">
+            <span className="inline-block px-4 py-1 rounded-full bg-blue-500/20 text-blue-400 font-semibold text-sm mb-6 border border-blue-500/30">
+              Thành lập từ năm 2024
+            </span>
+            <h2 className="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 animate-in fade-in slide-in-from-left-10 duration-700">
+              Định Hình <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Tương Lai Số</span>
+            </h2>
+            <p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-lg">
+              Loem Agency - Đơn vị tiên phong cung cấp giải pháp Marketing Facebook Performance, nội dung sáng tạo và hạ tầng kỹ thuật chuyên sâu.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button onClick={() => scrollToSection('services')} className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition flex items-center justify-center group shadow-xl shadow-blue-900/20">
+                Khám phá dịch vụ
+                <ChevronRight className="ml-2 group-hover:translate-x-1 transition" />
+              </button>
+              <button onClick={() => scrollToSection('contact')} className="px-8 py-4 bg-white/10 text-white border border-white/20 backdrop-blur-sm rounded-xl font-bold text-lg hover:bg-white/20 transition">
+                Tư vấn miễn phí
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Intro Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="relative">
+              <img 
+                src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80" 
+                alt="Team working" 
+                className="rounded-3xl shadow-2xl relative z-10 w-full"
+              />
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-100 rounded-2xl -z-0"></div>
+            </div>
+            <div className="space-y-6">
+              <h3 className="text-3xl font-bold text-slate-900">Về Chúng Tôi</h3>
+              <p className="text-lg text-slate-600 italic">
+                "Chúng tôi không chỉ chạy quảng cáo, chúng tôi xây dựng nền móng bền vững cho sự phát triển của doanh nghiệp bạn trong kỷ nguyên AI."
+              </p>
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                <p className="text-sm uppercase tracking-wider text-blue-600 font-bold mb-2">CEO & Founder</p>
+                <h4 className="text-2xl font-bold text-slate-900">Nguyễn Trọng Liêm</h4>
+                <p className="text-slate-500 mt-2">Dẫn dắt đội ngũ với nhiều năm kinh nghiệm thực chiến trong lĩnh vực Digital Marketing.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-6 pt-4">
+                <div>
+                  <h5 className="text-3xl font-bold text-blue-600">2024</h5>
+                  <p className="text-slate-500 font-medium">Năm thành lập</p>
+                </div>
+                <div>
+                  <h5 className="text-3xl font-bold text-blue-600">2</h5>
+                  <p className="text-slate-500 font-medium">Chi nhánh toàn quốc</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services" className="py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
+          <h2 className="text-4xl font-bold text-slate-900 mb-4">Dịch Vụ Của Chúng Tôi</h2>
+          <div className="w-20 h-1.5 bg-blue-600 mx-auto rounded-full mb-6"></div>
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            Nhấn vào từng nhóm dịch vụ để xem chi tiết các giải pháp tối ưu cho doanh nghiệp.
+          </p>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {services.map((service) => (
+            <div 
+              key={service.id} 
+              onClick={() => setSelectedService(service)}
+              className="bg-white p-8 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 flex flex-col h-full group cursor-pointer relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Info className="w-5 h-5 text-blue-500" />
+              </div>
+              <div className="mb-6 p-4 bg-slate-50 rounded-2xl inline-block group-hover:scale-110 group-hover:bg-blue-50 transition-all duration-500">
+                {service.icon}
+              </div>
+              <h4 className="text-xl font-bold text-slate-900 mb-4 leading-snug">{service.title}</h4>
+              <p className="text-slate-600 mb-6 text-sm flex-grow line-clamp-3">{service.description}</p>
+              <div className="text-blue-600 font-bold text-xs uppercase tracking-widest flex items-center">
+                Xem chi tiết <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Service Detail Popup (Modal) */}
+      {selectedService && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-300"
+            onClick={() => setSelectedService(null)}
+          ></div>
+          <div className="relative bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 max-h-[90vh] flex flex-col text-slate-900">
+            {/* Modal Header */}
+            <div className="p-6 md:p-10 border-b border-slate-100 flex justify-between items-start bg-slate-50/50">
+              <div className="flex gap-5">
+                <div className="p-4 bg-white rounded-2xl shadow-sm">
+                  {selectedService.icon}
+                </div>
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-bold leading-tight pr-8">{selectedService.title}</h3>
+                  <p className="text-blue-600 font-semibold mt-2 text-sm uppercase tracking-wider">Loem Agency Service Details</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setSelectedService(null)}
+                className="p-2 hover:bg-slate-200 rounded-full transition-colors sticky top-0"
+              >
+                <X className="w-6 h-6 text-slate-500" />
+              </button>
+            </div>
+            
+            {/* Modal Body */}
+            <div className="p-6 md:p-10 overflow-y-auto">
+              <p className="text-slate-600 text-lg leading-relaxed mb-8">
+                {selectedService.fullDescription}
+              </p>
+              
+              <div className="space-y-6">
+                <h4 className="font-bold text-slate-900 text-xl border-l-4 border-blue-600 pl-4 uppercase tracking-wide">Chi tiết các hạng mục</h4>
+                <div className="grid gap-4">
+                  {selectedService.items.map((item, idx) => (
+                    <div key={idx} className="bg-slate-50 p-5 rounded-2xl border border-slate-100 hover:border-blue-200 transition-colors">
+                      <div className="flex items-start gap-3 text-slate-900">
+                        <CheckCircle2 className="w-5 h-5 text-blue-500 mt-1 shrink-0" />
+                        <div>
+                          <p className="font-bold text-lg">{item.name}</p>
+                          <p className="text-slate-600 mt-1 text-sm leading-relaxed">{item.detail}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-10 p-6 bg-blue-600 rounded-2xl text-white flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                  <p className="font-bold text-xl">Quan tâm dịch vụ này?</p>
+                  <p className="text-blue-100 text-sm">Liên hệ ngay để nhận báo giá chi tiết trong 5 phút.</p>
+                </div>
+                <button 
+                  onClick={() => { setSelectedService(null); scrollToSection('contact'); }}
+                  className="bg-white text-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-slate-100 transition shadow-lg whitespace-nowrap"
+                >
+                  Nhận tư vấn ngay
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Branches Section */}
+      <section id="branches" className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            <div className="lg:w-1/2 w-full">
+              <h2 className="text-4xl font-bold text-slate-900 mb-8">Hệ Thống Chi Nhánh</h2>
+              <div className="space-y-4">
+                {branches.map((branch, index) => (
+                  <div 
+                    key={index} 
+                    onClick={() => setActiveBranch(index)}
+                    className={`flex gap-4 p-5 rounded-2xl transition cursor-pointer border ${activeBranch === index ? 'bg-blue-50 border-blue-200 shadow-sm' : 'hover:bg-slate-50 border-transparent'}`}
+                  >
+                    <div className={`p-3 rounded-full h-fit transition ${activeBranch === index ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600'}`}>
+                      <MapPin className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-slate-900">{branch.city}</h4>
+                      <p className="text-slate-600 mt-1 text-sm">{branch.address}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="lg:w-1/2 w-full h-[450px] bg-slate-100 rounded-3xl overflow-hidden shadow-inner border border-slate-200 relative">
+              <iframe
+                title={`Map-${activeBranch}`}
+                src={branches[activeBranch].mapUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                className="w-full h-full"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA & Form Section */}
+      <section id="contact" className="py-24 bg-blue-900 relative overflow-hidden">
+        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="bg-white rounded-[2.5rem] p-8 md:p-16 shadow-2xl flex flex-col lg:flex-row gap-12">
+            <div className="lg:w-1/2">
+              <h2 className="text-4xl font-extrabold text-slate-900 mb-6 leading-tight">Sẵn sàng đưa doanh nghiệp bạn vươn xa?</h2>
+              <p className="text-lg text-slate-600 mb-10 leading-relaxed">
+                Hãy liên hệ trực tiếp với chúng tôi để nhận được tư vấn chiến lược miễn phí và báo giá chi tiết.
+              </p>
+              
+              <div className="space-y-6">
+                <a href="tel:0888802683" className="flex items-center p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 transition-colors group text-slate-900">
+                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white mr-4 shadow-lg shadow-blue-200">
+                    <Phone className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Hotline / Zalo</p>
+                    <p className="text-xl font-bold group-hover:text-blue-600 transition-colors">0888.802.683</p>
+                  </div>
+                </a>
+
+                <a href="mailto:info@loemagency.net" className="flex items-center p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 transition-colors group text-slate-900">
+                  <div className="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-white mr-4 shadow-lg shadow-slate-200">
+                    <Mail className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Email liên hệ</p>
+                    <p className="text-xl font-bold group-hover:text-blue-600 transition-colors">info@loemagency.net</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div className="lg:w-1/2 bg-slate-900 rounded-3xl p-8 text-white">
+              <h3 className="text-2xl font-bold mb-6 flex items-center">
+                Gửi yêu cầu tư vấn
+                <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+              </h3>
+              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-1">Họ tên</label>
+                    <input type="text" className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Nguyễn Văn A" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-1">Số điện thoại</label>
+                    <input type="text" className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="0888 xxx xxx" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Địa chỉ Email</label>
+                  <input type="email" className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-white" placeholder="client@example.com" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Dịch vụ quan tâm</label>
+                  <select className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all appearance-none cursor-pointer text-white">
+                    <option>Quảng cáo Facebook Ads</option>
+                    <option>Sản xuất nội dung/Video</option>
+                    <option>Dịch vụ kỹ thuật/Hạ tầng</option>
+                    <option>Tư vấn chiến lược</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Nội dung yêu cầu</label>
+                  <textarea className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all h-24 text-white" placeholder="Bạn cần chúng tôi tư vấn gì?"></textarea>
+                </div>
+                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-blue-900/40 transform active:scale-95">
+                  Gửi thông tin ngay
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2 tracking-widest uppercase">LOEM <span className="text-blue-500">AGENCY</span></h2>
+              <p className="text-sm max-w-sm">Đối tác chiến lược Digital Marketing tin cậy của doanh nghiệp từ 2024.</p>
+            </div>
+            <div className="flex space-x-6">
+              <a href="https://facebook.com/loemagency" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors"><Facebook /></a>
+              <a href="https://zalo.me/0888802683" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors"><MessageCircle /></a>
+              <a href="#" className="hover:text-blue-500 transition-colors"><TrendingUp /></a>
+            </div>
+          </div>
+          <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-[0.2em]">
+            <p>&copy; 2024 LOEM AGENCY. ALL RIGHTS RESERVED.</p>
+            <div className="flex space-x-8">
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* Floating Buttons */}
+      <div className="fixed bottom-6 right-6 z-[110] flex flex-col gap-4">
+        {/* Nút Zalo Chat với Biểu tượng mới */}
+        <a 
+          href="https://zalo.me/0888802683" 
+          target="_blank" 
+          rel="noreferrer"
+          title="Chat qua Zalo"
+          className="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform animate-bounce group relative"
+        >
+          <MessageCircleMore size={30} className="drop-shadow-sm" />
+          <span className="absolute right-full mr-3 bg-blue-600 text-white text-xs py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl font-bold border border-blue-400">Zalo: 0888.802.683</span>
+        </a>
+        
+        {/* Nút Gọi điện */}
+        <a 
+          href="tel:0888802683" 
+          title="Gọi ngay"
+          className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform group relative"
+        >
+          <Phone size={26} />
+          <span className="absolute right-full mr-3 bg-green-500 text-white text-xs py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl font-bold border border-green-400">Gọi ngay</span>
+        </a>
+      </div>
+    </div>
+  );
+};
+
+export default App;
