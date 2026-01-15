@@ -25,25 +25,61 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Import Inter font - Professional & Lightweight */
+        /* Import Inter font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         body { scroll-behavior: smooth; }
         .glass { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(12px); }
         .dark .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); }
         
-        @keyframes fade-out {
-            from { opacity: 1; visibility: visible; }
-            to { opacity: 0; visibility: hidden; }
+        /* Static Splash Screen Styles - Optimized for instant loading */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background-color: #020617; /* slate-950 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
         }
-        .splash-fade { animation: fade-out 0.5s ease-in-out forwards; }
+        #splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .splash-logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 0.2em;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .splash-logo span { color: #3b82f6; } /* blue-500 */
+        .loading-bar-container {
+            width: 120px;
+            height: 2px;
+            background-color: #1e293b;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .loading-bar {
+            height: 100%;
+            background-color: #3b82f6;
+            width: 0%;
+            animation: load 1.2s ease-in-out infinite;
+        }
+        @keyframes load {
+            0% { width: 0%; transform: translateX(-100%); }
+            50% { width: 50%; transform: translateX(50%); }
+            100% { width: 0%; transform: translateX(200%); }
+        }
         
         /* Custom scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-        
-        @keyframes loading { 0% { width: 0%; } 100% { width: 100%; } }
         
         /* Balanced typography */
         h1, h2, h3, h4 { letter-spacing: -0.01em; }
@@ -51,6 +87,15 @@
     </style>
 </head>
 <body class="bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 transition-colors duration-300 overflow-x-hidden antialiased">
+    
+    <!-- Static Splash Screen (Shows instantly before JS loads) -->
+    <div id="splash-screen">
+        <div class="splash-logo">LOEM <span>AGENCY</span></div>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+    </div>
+
     <div id="root"></div>
 
     <script type="text/babel">
@@ -66,7 +111,6 @@
         };
 
         const App = () => {
-            const [isLoading, setIsLoading] = useState(true);
             const [isDarkMode, setIsDarkMode] = useState(false);
             const [isMenuOpen, setIsMenuOpen] = useState(false);
             const [scrolled, setScrolled] = useState(false);
@@ -74,7 +118,12 @@
             const [selectedService, setSelectedService] = useState(null);
 
             useEffect(() => {
-                const timer = setTimeout(() => setIsLoading(false), 1200);
+                // Hide splash screen after a short delay to ensure React is rendered
+                const timer = setTimeout(() => {
+                    const splash = document.getElementById('splash-screen');
+                    if (splash) splash.classList.add('hidden');
+                }, 800);
+                
                 const handleScroll = () => setScrolled(window.scrollY > 50);
                 window.addEventListener('scroll', handleScroll);
                 
@@ -114,7 +163,7 @@
                         { name: "Quảng cáo Chuyển đổi", detail: "Tập trung ra đơn hàng trực tiếp trên Website/Landing Page." },
                         { name: "Quảng cáo Tin nhắn", detail: "Tối ưu lượt inbox và kết hợp kịch bản chốt đơn tự động." },
                         { name: "Quảng cáo Livestream", detail: "Đẩy mắt xem và tương tác thực tế khi livestream." },
-                        { name: "Tiếp thị lại (Remarketing)", detail: "Bám đuổi khách hàng cũ để thúc đẩy hành vi mua lại." }
+                        { name: "Tiếp thị lại (Remarketing)", detail: "Bám đuổi khách hàng cũ để nhắc nhớ và thúc đẩy hành vi mua lại." }
                     ]
                 },
                 {
@@ -134,7 +183,7 @@
                     id: 3,
                     title: "Kỹ thuật & Hạ tầng",
                     description: "Giải pháp ổn định và bảo mật lâu dài cho hệ thống quảng cáo doanh nghiệp.",
-                    fullDescription: "Cung cấp nền tảng vững chắc để doanh nghiệp vận hành chiến dịch ngân sách lớn không lo gián đoạn.",
+                    fullDescription: "Cung cấp nền tảng vững chắc để doanh nghiệp vận hành các chiến dịch quảng cáo ngân sách lớn không lo gián đoạn.",
                     icon: "shield-check",
                     color: "text-green-600",
                     items: [
@@ -177,17 +226,6 @@
                 }
                 setIsMenuOpen(false);
             };
-
-            if (isLoading) {
-                return (
-                    <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center">
-                        <h1 className="text-2xl font-bold text-white tracking-[0.3em] mb-4 animate-pulse">LOEM AGENCY</h1>
-                        <div className="w-32 h-0.5 bg-slate-800 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-600" style={{ animation: 'loading 1.2s ease-in-out infinite' }}></div>
-                        </div>
-                    </div>
-                );
-            }
 
             return (
                 <div className="overflow-x-hidden min-h-screen font-sans">
@@ -393,7 +431,7 @@
                         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px] pointer-events-none"></div>
                         <div className="max-w-7xl mx-auto relative z-10 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-10 md:p-16 grid lg:grid-cols-2 gap-16">
                             <div className="flex flex-col justify-center">
-                                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">Hợp tác cùng <br/> Tommy Nguyen</h2>
+                                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">Hợp tác cùng <br/> Loem Agency</h2>
                                 <p className="text-base text-slate-500 dark:text-slate-400 mb-10 font-medium">Bắt đầu hành trình tối ưu hóa kinh doanh của bạn ngay hôm nay cùng đội ngũ chuyên gia Loem Agency.</p>
                                 <div className="space-y-4">
                                     <a href="tel:0888802683" className="flex items-center p-6 bg-slate-50 dark:bg-slate-800 rounded-2xl hover:bg-blue-50 transition-all group">
